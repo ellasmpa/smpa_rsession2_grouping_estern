@@ -126,7 +126,8 @@ Now remember our original goal of wanting to travel in January? We can chain tog
 srqflights %>% 
   filter(month == 1) %>% 
   group_by(carrier, flight, origin) %>% 
-  summarise(count = n())
+  summarise(count = n()) %>% 
+  arrange(desc(count))
 
 ```
 
@@ -159,9 +160,10 @@ So we can easily handle that by adding an argument to calculate the average rega
 ```{r}
 
 srqflights %>% 
-  filter(month == 1) %>% 
-  group_by(carrier, flight, origin) %>% 
-  summarise(avg_delay = mean(dep_delay, na.rm = TRUE))
+  group_by(month, flight, origin, carrier) %>% 
+  summarise(avg_delay = mean(dep_delay, na.rm = TRUE),
+            median_delay = mean(dep_delay, na.rm = TRUE),
+            flight_count = n())
 
 ```
 
@@ -181,7 +183,7 @@ Let's say for example, ok, we now know the best on-time flight in January. What 
 
 srqflights %>% 
   group_by(carrier, flight, origin) %>% 
-  summarise(avg_delay = mean(dep_delay, na.rm = TRUE))
+  summarise(avg_delay = median(dep_delay, na.rm = TRUE))
 
 ```
 
@@ -213,7 +215,30 @@ We now have a lot more information at our fingertips than we did a few minutes a
 ## More Practice Together
 
 ```{r}
+flights  <- nycflights13::flights
 
+```
+## how many delta flights were delayed in the month of august on averagw?
+
+```{r}
+coolio <- flights %>% 
+  filter(carrier == "DL") %>% 
+  group_by(month = 8) %>% 
+  summarise(avg_delay = mean(dep_delay, na.rm = TRUE), 
+            flight_count = n())
+
+
+
+```
+
+## how many delta flights were delayed flying into DCA in the month of august on average?
+
+```{r}
+test <- flights %>% 
+  filter(carrier == "DL", dest == "DCA") %>% 
+  group_by(month) %>% 
+  summarise(avg_delay = mean(dep_delay, na.rm = TRUE), 
+            flight_count = n())
 
 
 ```
@@ -221,14 +246,8 @@ We now have a lot more information at our fingertips than we did a few minutes a
 
 ```{r}
 
-
-
-```
-
-
-```{r}
-
-
+srqflights %>% 
+  mutate(is_delay = if_else(dep_delay > 0, "YES", "NO"))
 
 ```
 
@@ -236,11 +255,11 @@ We now have a lot more information at our fingertips than we did a few minutes a
 ```{r}
 
 
-
-```
-
-
-```{r}
+srqflights %>% 
+  mutate(is_delay = if_else(dep_delay > 0, "YES", "NO")) %>% 
+  group_by(is_delay) %>% 
+  summarise(flight_count = n()) %>% 
+  mutate(pct = flight_count / sum(flight_count))
 
 
 

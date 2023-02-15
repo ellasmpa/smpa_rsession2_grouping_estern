@@ -20,7 +20,7 @@ library(ggthemes)
 library(esquisse)
 
 #import data
-county_pop <-  read_xlsx('county_pop.xlsx') %>% 
+county_pop <-  read_xlsx('data/county_pop.xlsx') %>% 
   clean_names()
 
 
@@ -71,7 +71,7 @@ Color is for the outline; fill is inside the bars.
 ```{r}
 
 ggplot(metro_pop, aes(x = reorder(geography, pop_estimate2016), y = pop_estimate2016)) + 
-  geom_col(color = "black", fill = "red") +
+  geom_col(color = "black", fill = "orange") +
   coord_flip()
 
 ```
@@ -142,8 +142,7 @@ ggplot(metro_pop, aes(x = reorder(geography, pop_estimate2016), y = pop_estimate
        caption = "Source: U.S. Census Bureau") +
   theme_fivethirtyeight()
 ```
-
-
+ggplot(test, aes(x = reorder(geography, pop_estimate2016), y = pop_estimate2016)) + 
 
 # Part 2
 
